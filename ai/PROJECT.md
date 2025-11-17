@@ -5,9 +5,8 @@ sudo snap install docker
 docker compose up -d
 
 **Access tools in the stack**
-Frontend: http://app.local (protected by TinyAuth)
-REST API: http://app.local/api (protected by TinyAuth)
-TinyAuth: http://app.local/auth
+Frontend: http://app.local (protected by Traefik)
+REST API: http://app.local/api (protected by Traefik)
 Traefik Dashboard: http://traefik.local:8080
 PostgreSQL: localhost:5432
 
@@ -15,7 +14,7 @@ PostgreSQL: localhost:5432
 Add to /etc/hosts: 127.0.0.1 app.local traefik.local
 
 **Authentication**
-All requests to the frontend (port 4200) now go through TinyAuth login.
+All requests to the frontend (port 4200) now go through Traefik login.
 Default users: alice/password, bob/password
 
 **Purpose**

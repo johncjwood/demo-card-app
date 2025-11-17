@@ -21,7 +21,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`traefik.example.com`)"
       - "traefik.http.routers.traefik.service=api@internal"
-      - "traefik.http.middlewares.basic-auth.basicauth.users=alice:$$2a$$10$$RLpC2XB7GH6yL023az1.WenxrcNqtFKQdrtJ.sUB5KFsDUNXT2.se,bob:$$2a$$10$$NIVsVGYSI1UBu.lk2lVWIetQNfxnYSeI4zQyPjpMzhwTjqjGPgb2q"
+      - "traefik.http.middlewares.basic-auth.basicauth.users=alice:$2y$05$67ohZ8P.AbWdwiMsVC4IneDGCsuRe/dzgJBBf2IE56IQC6g/nYfAO,bob:$2y$05$EH9.Khb7hJUMTF5lQFCnDuY62wX3vfnKdAEYj4RsxdI0lM5ZKL06."
 
   postgres:
     image: postgres:15
