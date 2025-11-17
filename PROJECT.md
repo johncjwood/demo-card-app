@@ -5,10 +5,18 @@ sudo snap install docker
 docker compose up -d
 
 **Access tools in the stack**
-Frontend: http://localhost:4200
-REST API: http://localhost:3001
-TinyAuth: http://localhost:3000
+Frontend: http://app.local (protected by TinyAuth)
+REST API: http://app.local/api (protected by TinyAuth)
+TinyAuth: http://app.local/auth
+Traefik Dashboard: http://traefik.local:8080
 PostgreSQL: localhost:5432
+
+**Setup /etc/hosts**
+Add to /etc/hosts: 127.0.0.1 app.local traefik.local
+
+**Authentication**
+All requests to the frontend (port 4200) now go through TinyAuth login.
+Default users: alice/password, bob/password
 
 **Purpose**
 This is an application designed to mimic elements of a normal enterprise application.

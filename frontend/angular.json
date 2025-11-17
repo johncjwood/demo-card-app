@@ -56,7 +56,9 @@
               "buildTarget": "frontend:build:production"
             },
             "development": {
-              "buildTarget": "frontend:build:development"
+              "buildTarget": "frontend:build:development",
+              "host": "0.0.0.0",
+              "allowedHosts": ["app.example.com"]
             }
           },
           "defaultConfiguration": "development"

@@ -1,4 +1,9 @@
-TinyAuth Setup
+**/etc/hosts setup**
+The code assumes that you control the example.com domain.
+To add to the hosts file, run:
+echo "127.0.0.1 app.example.com" | sudo tee -a /etc/hosts
+
+**TinyAuth Setup**
 
 Resource: https://saisamarthudikeri.medium.com/tinyauth-simplest-authentication-for-your-self-hosted-apps-6c37b11f4853
 

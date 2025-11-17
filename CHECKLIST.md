@@ -7,4 +7,4 @@
 - [x] Create proxy network in docker-compose.yml
 - [x] Create Dockerfile for frontend (if needed)
 - [x] Create Dockerfile for REST API (if needed)
-- [ ] Test docker-compose configuration
+- [x] Test docker-compose configuration
