@@ -1,10 +1,10 @@
 # Checklist
 
 - [x] Ask top 3 clarifying questions
-- [x] Add PostgreSQL container to docker-compose.yml
-- [x] Add Angular frontend container to docker-compose.yml
-- [x] Add Express REST API container to docker-compose.yml
-- [x] Create proxy network in docker-compose.yml
-- [x] Create Dockerfile for frontend (if needed)
-- [x] Create Dockerfile for REST API (if needed)
-- [x] Test docker-compose configuration
+- [x] Examine project structure and locate frontend files
+- [x] Find the navigation button component
+- [x] Identify styling issues when button is in shrunk state
+- [x] Fix the button styling for shrunk state
+- [x] Test the fix
+- [x] Fix navigation icons disappearing in collapsed state
+- [x] Add tooltip hover text for collapsed navigation items
