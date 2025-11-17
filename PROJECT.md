@@ -1,5 +1,15 @@
 **Three Tiered Application for Trading Card Game**
 
+**Get stack up**
+sudo snap install docker
+docker compose up -d
+
+**Access tools in the stack**
+Frontend: http://localhost:4200
+REST API: http://localhost:3001
+TinyAuth: http://localhost:3000
+PostgreSQL: localhost:5432
+
 **Purpose**
 This is an application designed to mimic elements of a normal enterprise application.
 Some choices, such as using Angular and having a REST API instead of doing server-side rendering are consistent with that goal.
