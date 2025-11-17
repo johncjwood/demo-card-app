@@ -21,34 +21,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`traefik.example.com`)"
       - "traefik.http.routers.traefik.service=api@internal"
-
-  tinyauth:
-    image: ghcr.io/steveiliop56/tinyauth:v4
-    container_name: tinyauth
-    restart: unless-stopped
-
-    environment:
-      - SECRET=JRRLGS95HKKHXx1B7yGbHDHJuTBL7Tq4
-      - APP_URL=http://auth.example.com
-      - LOG_LEVEL=info
-      - DISABLE_CONTINUE=false
-      - LOGIN_MAX_RETRIES=3
-      - LOGIN_TIMEOUT=300
-      - USERS=alice:$$2a$$10$$RLpC2XB7GH6yL023az1.WenxrcNqtFKQdrtJ.sUB5KFsDUNXT2.se,bob:$$2a$$10$$NIVsVGYSI1UBu.lk2lVWIetQNfxnYSeI4zQyPjpMzhwTjqjGPgb2q
-
-    networks:
-      - proxy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.tinyauth.rule=PathPrefix(`/auth`) || PathPrefix(`/assets`) || PathPrefix(`/favicon`) || Path(`/favicon.svg`) || Path(`/site.webmanifest`) || Path(`/apple-touch-icon.png`)"
-      - "traefik.http.routers.tinyauth.priority=100"
-      - "traefik.http.routers.tinyauth-host.rule=Host(`auth.example.com`)"
-      - "traefik.http.routers.tinyauth-host.middlewares=auth-redirect"
-      - "traefik.http.middlewares.auth-redirect.redirectregex.regex=^http://auth.example.com/?$$"
-      - "traefik.http.middlewares.auth-redirect.redirectregex.replacement=http://auth.example.com/auth"
-      - "traefik.http.services.tinyauth.loadbalancer.server.port=3000"
-      - "traefik.http.middlewares.tinyauth.forwardauth.address=http://tinyauth:3000/auth"
-      - "traefik.http.middlewares.tinyauth.forwardauth.authResponseHeaders=X-Forwarded-User"
+      - "traefik.http.middlewares.basic-auth.basicauth.users=alice:$$2a$$10$$RLpC2XB7GH6yL023az1.WenxrcNqtFKQdrtJ.sUB5KFsDUNXT2.se,bob:$$2a$$10$$NIVsVGYSI1UBu.lk2lVWIetQNfxnYSeI4zQyPjpMzhwTjqjGPgb2q"
 
   postgres:
     image: postgres:15
@@ -84,7 +57,7 @@ services:
       - "traefik.http.routers.api-context.priority=100"
       - "traefik.http.routers.api-context.service=api"
       - "traefik.http.routers.api.rule=PathPrefix(`/api`)"
-      - "traefik.http.routers.api.middlewares=tinyauth"
+      - "traefik.http.routers.api.middlewares=basic-auth"
       - "traefik.http.routers.api.priority=90"
       - "traefik.http.services.api.loadbalancer.server.port=3001"
 
@@ -105,7 +78,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`app.example.com`)"
-      - "traefik.http.routers.frontend.middlewares=tinyauth"
+      - "traefik.http.routers.frontend.middlewares=basic-auth"
       - "traefik.http.services.frontend.loadbalancer.server.port=4200"
 
 networks:
