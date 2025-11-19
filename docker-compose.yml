@@ -33,8 +33,6 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password1!
       - POSTGRES_DB=cardapp
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
     networks:
       - proxy
 
@@ -61,6 +59,21 @@ services:
       - "traefik.http.routers.api.priority=90"
       - "traefik.http.services.api.loadbalancer.server.port=3001"
 
+  db-setup:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    container_name: db-setup
+    environment:
+      - DB_HOST=postgres
+      - DB_NAME=cardapp
+      - DB_USER=postgres
+      - DB_PASSWORD=password1!
+    depends_on:
+      - postgres
+    networks:
+      - proxy
+
   frontend:
     build:
       context: ./frontend
@@ -73,6 +86,7 @@ services:
     depends_on:
       - rest-api
       - traefik
+      - db-setup
     networks:
       - proxy
     labels:
@@ -85,5 +99,3 @@ networks:
   proxy:
     driver: bridge
 
-volumes:
-  postgres_data:
