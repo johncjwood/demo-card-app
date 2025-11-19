@@ -1,8 +1,15 @@
 # Checklist
 
 - [x] Ask top 3 clarifying questions
-- [x] Create database setup scripts directory structure
-- [x] Create Python script to run SQL commands sequentially
-- [x] Create Dockerfile for database setup container
-- [x] Update docker-compose.yml to include db-setup service with proper dependencies
-- [x] Test the setup to ensure scripts run after PostgreSQL is ready
+- [x] Examine current db folder structure and locate 01 Create Tables.sql
+- [x] Update the SQL file to add user table with specified columns
+- [x] Verify the table structure meets requirements
+- [x] Ask top 3 clarifying questions for card table
+- [x] Add card table to the SQL file
+- [x] Verify card table structure meets requirements
+- [x] Ask top 3 clarifying questions for card_subset table
+- [x] Add card_subset table to the SQL file
+- [x] Verify card_subset table structure meets requirements
+- [x] Ask top 3 clarifying questions for assets folder
+- [x] Determine ideal location for assets folder
+- [x] Create assets folder in appropriate location
