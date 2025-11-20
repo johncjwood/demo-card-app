@@ -33,7 +33,7 @@ interface Card {
             <img 
               [src]="getImagePath(card.subset_num)" 
               [alt]="card.card_name"
-              class="w-full h-48 object-cover rounded mb-3"
+              class="w-full h-64 object-contain rounded mb-3 bg-gray-50"
               (error)="onImageError($event)"
             />
             <div class="space-y-2">
