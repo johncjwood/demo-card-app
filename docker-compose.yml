@@ -46,7 +46,7 @@ services:
       - NODE_ENV=development
       - DATABASE_URL=postgresql://postgres:password1!@postgres:5432/cardapp
     depends_on:
-      - postgres
+      - db-setup
     networks:
       - proxy
     labels:
@@ -86,7 +86,6 @@ services:
     depends_on:
       - rest-api
       - traefik
-      - db-setup
     networks:
       - proxy
     labels:

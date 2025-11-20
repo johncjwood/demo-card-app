@@ -1,6 +1,7 @@
 # Checklist
 
 - [x] Ask top 3 clarifying questions
-- [x] Locate the "10 Insert Test Data.sql" file
-- [x] Update "MEG" to "meg" in the file
-- [x] Verify the changes are correct
+- [x] Read current docker-compose.yml to understand structure
+- [x] Add retry logic to db-setup script
+- [x] Update docker-compose.yml dependencies
+- [x] Test the changes

@@ -11,3 +11,6 @@ htpasswd -nbB bob password
 bob:$2y$05$EH9.Khb7hJUMTF5lQFCnDuY62wX3vfnKdAEYj4RsxdI0lM5ZKL06.
 
 Added these values to docker-compose.yml
+
+**Running the stack**
+docker compose down -v && docker compose up --build -d
