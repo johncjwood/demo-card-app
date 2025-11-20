@@ -13,6 +13,8 @@ RUN npm install
 # Copy application files
 COPY . .
 
+
+
 # Expose Angular development server port
 EXPOSE 4200
 

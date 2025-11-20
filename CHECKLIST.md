@@ -1,7 +1,8 @@
 # Checklist
 
 - [x] Ask top 3 clarifying questions
-- [x] Read current docker-compose.yml to understand structure
-- [x] Add retry logic to db-setup script
-- [x] Update docker-compose.yml dependencies
-- [x] Test the changes
+- [x] Check API response data structure
+- [x] Examine Angular component template and data binding
+- [ ] Check for JavaScript console errors
+- [ ] Verify image paths are working
+- [ ] Test component rendering logic

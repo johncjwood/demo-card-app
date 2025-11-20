@@ -1,5 +1,6 @@
 // src/app.ts
 import express, { Request, Response } from 'express';
+import path from 'path';
 import { query } from './database';
 
 interface User {
@@ -25,6 +26,8 @@ const app = express();
 const PORT = 3001;
 
 app.use(express.json());
+
+
 
 // Sample data
 let users: User[] = [

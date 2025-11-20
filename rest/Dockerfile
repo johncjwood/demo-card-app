@@ -16,6 +16,8 @@ RUN npm install -g nodemon ts-node
 # Copy application files
 COPY . .
 
+
+
 # Expose Express API port
 EXPOSE 3001
 
