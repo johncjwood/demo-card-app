@@ -4,7 +4,7 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root'
 })
 export class AuthService {
-  private _username = signal('CardCollector123');
+  private _username = signal('bob');
   private _isAuthenticated = signal(true);
 
   get username() {

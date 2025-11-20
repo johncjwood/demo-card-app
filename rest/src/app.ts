@@ -59,7 +59,7 @@ app.post('/api/cards', async (req: Request, res: Response) => {
   
   try {
     // SQL query with joins
-    const query = `
+    const sqlQuery = `
       SELECT 
         c.card_name,
         c.color,
@@ -74,12 +74,12 @@ app.post('/api/cards', async (req: Request, res: Response) => {
       FROM card c
       LEFT JOIN card_subset cs ON c.card_subset_id = cs.card_subset_id
       LEFT JOIN user_card uc ON c.card_id = uc.card_id
-      LEFT JOIN users u ON uc.user_id = u.user_id AND u.login_id = ?
-      WHERE c.card_set = ?
+      LEFT JOIN users u ON uc.user_id = u.user_id AND u.login_id = $1
+      WHERE c.card_set = $2
       ORDER BY c.subset_num, c.card_name
     `;
     
-    const results = await query(query, [login_id, card_set]);
+    const results = await query(sqlQuery, [login_id, card_set]);
     
     res.json(results);
   } catch (error) {
