@@ -1,15 +1,9 @@
 # Checklist
 
 - [x] Ask top 3 clarifying questions
-- [x] Examine current db folder structure and locate 01 Create Tables.sql
-- [x] Update the SQL file to add user table with specified columns
-- [x] Verify the table structure meets requirements
-- [x] Ask top 3 clarifying questions for card table
-- [x] Add card table to the SQL file
-- [x] Verify card table structure meets requirements
-- [x] Ask top 3 clarifying questions for card_subset table
-- [x] Add card_subset table to the SQL file
-- [x] Verify card_subset table structure meets requirements
-- [x] Ask top 3 clarifying questions for assets folder
-- [x] Determine ideal location for assets folder
-- [x] Create assets folder in appropriate location
+- [x] Examine project structure and locate meg.csv file
+- [x] Review existing "10 Insert Test Data.sql" file
+- [x] Parse meg.csv data to understand structure
+- [x] Create INSERT statements for card table using meg.csv data
+- [x] Update file_loc column to use ./meg/{subset_num}.jpg format
+- [x] Test and validate SQL syntax
