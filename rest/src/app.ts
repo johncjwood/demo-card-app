@@ -92,6 +92,7 @@ app.post('/api/cards', async (req: Request, res: Response) => {
     // SQL query with joins
     const sqlQuery = `
       SELECT 
+        c.card_id,
         c.card_name,
         c.color,
         c.card_type,
@@ -119,6 +120,58 @@ app.post('/api/cards', async (req: Request, res: Response) => {
   }
 });
 
+
+// GET /api/user/:login_id - Get user_id from login_id
+app.get('/api/user/:login_id', async (req: Request, res: Response) => {
+  const { login_id } = req.params;
+  
+  try {
+    const result = await query('SELECT user_id FROM users WHERE login_id = $1', [login_id]);
+    
+    if (result.length > 0) {
+      res.json({ user_id: result[0].user_id });
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    console.error('Get user error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// PUT /api/cards/quantity - Update card quantity for user
+app.put('/api/cards/quantity', async (req: Request, res: Response) => {
+  const { card_id, user_id, quantity } = req.body;
+  
+  if (!card_id || !user_id || quantity === undefined) {
+    return res.status(400).json({ message: 'card_id, user_id, and quantity are required' });
+  }
+  
+  try {
+    // Check if user_card record exists
+    const existingRecord = await query('SELECT * FROM user_card WHERE user_id = $1 AND card_id = $2', [user_id, card_id]);
+    
+    if (existingRecord.length > 0) {
+      // Update existing record
+      if (quantity <= 0) {
+        // Delete record if quantity is 0 or negative
+        await query('DELETE FROM user_card WHERE user_id = $1 AND card_id = $2', [user_id, card_id]);
+      } else {
+        await query('UPDATE user_card SET quantity = $1 WHERE user_id = $2 AND card_id = $3', [quantity, user_id, card_id]);
+      }
+    } else if (quantity > 0) {
+      // Insert new record only if quantity is positive
+      const maxId = await query('SELECT COALESCE(MAX(user_card_id), 0) + 1 as next_id FROM user_card');
+      const nextId = maxId[0].next_id;
+      await query('INSERT INTO user_card (user_card_id, user_id, card_id, quantity) VALUES ($1, $2, $3, $4)', [nextId, user_id, card_id, quantity]);
+    }
+    
+    res.json({ success: true, quantity: Math.max(0, quantity) });
+  } catch (error) {
+    console.error('Update quantity error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
