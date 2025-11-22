@@ -26,6 +26,12 @@ const app = express();
 const PORT = 3001;
 
 app.use(express.json());
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
 
 
 
@@ -49,6 +55,28 @@ app.get('/api/users/:id', (req: Request, res: Response) => {
     res.json(user);
   } else {
     res.status(404).json({ message: 'User not found' });
+  }
+});
+
+// POST /api/login - Authenticate user
+app.post('/api/login', async (req: Request, res: Response) => {
+  const { username, password } = req.body;
+  
+  if (!username || !password) {
+    return res.json(-1);
+  }
+  
+  try {
+    const result = await query('SELECT * FROM users WHERE login_id = $1 AND password = $2', [username, password]);
+    
+    if (result.length > 0) {
+      res.json(0);
+    } else {
+      res.json(-1);
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    res.json(-1);
   }
 });
 

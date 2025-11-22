@@ -90,7 +90,7 @@ export class MegComponent implements OnInit {
   private loadCards() {
     const username = this.authService.username();
     
-    this.http.post<Card[]>('/api/cards', {
+    this.http.post<Card[]>('http://localhost:3001/api/cards', {
       card_set: 'meg',
       login_id: username
     }).subscribe({

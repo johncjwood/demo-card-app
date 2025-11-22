@@ -4,8 +4,8 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root'
 })
 export class AuthService {
-  private _username = signal('bob');
-  private _isAuthenticated = signal(true);
+  private _username = signal('');
+  private _isAuthenticated = signal(false);
 
   get username() {
     return this._username.asReadonly();
@@ -13,6 +13,25 @@ export class AuthService {
 
   get isAuthenticated() {
     return this._isAuthenticated.asReadonly();
+  }
+
+  async login(username: string, password: string): Promise<number> {
+    const response = await fetch('http://localhost:3001/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username, password })
+    });
+    
+    const result = await response.json();
+    
+    if (result === 0) {
+      this._isAuthenticated.set(true);
+      this._username.set(username);
+    }
+    
+    return result;
   }
 
   logout() {
