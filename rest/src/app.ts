@@ -310,6 +310,147 @@ app.post('/api/profile/:login_id', async (req: Request, res: Response) => {
   }
 });
 
+// GET /api/store/cards - Get all cards available in store
+app.get('/api/store/cards', async (req: Request, res: Response) => {
+  try {
+    const sqlQuery = `
+      SELECT 
+        c.card_id,
+        c.card_name,
+        c.color,
+        c.card_type,
+        c.rarity,
+        c.file_loc,
+        cs.set_name,
+        i.price,
+        i.available_qty
+      FROM card c
+      LEFT JOIN card_subset cs ON c.card_subset_id = cs.card_subset_id
+      INNER JOIN inventory i ON c.card_id = i.card_id
+      WHERE i.available_qty > 0
+      ORDER BY cs.set_name, c.card_name
+    `;
+    
+    const results = await query(sqlQuery, []);
+    res.json(results);
+  } catch (error) {
+    console.error('Get store cards error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// GET /api/cart/:user_id - Get user's cart items
+app.get('/api/cart/:user_id', async (req: Request, res: Response) => {
+  const { user_id } = req.params;
+  
+  try {
+    const sqlQuery = `
+      SELECT 
+        c.card_id,
+        c.card_name,
+        cart.price,
+        cart.quantity
+      FROM cart
+      LEFT JOIN card c ON cart.card_id = c.card_id
+      WHERE cart.user_id = $1
+      ORDER BY c.card_name
+    `;
+    
+    const results = await query(sqlQuery, [user_id]);
+    res.json(results);
+  } catch (error) {
+    console.error('Get cart error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// POST /api/checkout - Process checkout
+app.post('/api/checkout', async (req: Request, res: Response) => {
+  const { user_id } = req.body;
+  
+  if (!user_id) {
+    return res.status(400).json({ message: 'user_id is required' });
+  }
+  
+  try {
+    // Get cart items
+    const cartItems = await query('SELECT card_id, quantity FROM cart WHERE user_id = $1', [user_id]);
+    
+    if (cartItems.length === 0) {
+      return res.status(400).json({ message: 'Cart is empty' });
+    }
+    
+    // Add items to user collection
+    for (const item of cartItems) {
+      const existing = await query('SELECT * FROM user_card WHERE user_id = $1 AND card_id = $2', [user_id, item.card_id]);
+      
+      if (existing.length > 0) {
+        await query('UPDATE user_card SET quantity = quantity + $1 WHERE user_id = $2 AND card_id = $3', 
+          [item.quantity, user_id, item.card_id]);
+      } else {
+        const maxId = await query('SELECT COALESCE(MAX(user_card_id), 0) + 1 as next_id FROM user_card');
+        await query('INSERT INTO user_card (user_card_id, user_id, card_id, quantity) VALUES ($1, $2, $3, $4)', 
+          [maxId[0].next_id, user_id, item.card_id, item.quantity]);
+      }
+      
+      // Update inventory
+      await query('UPDATE inventory SET available_qty = available_qty - $1 WHERE card_id = $2', 
+        [item.quantity, item.card_id]);
+    }
+    
+    // Clear cart
+    await query('DELETE FROM cart WHERE user_id = $1', [user_id]);
+    
+    // Add history entry
+    await query('INSERT INTO user_hist (user_id, txt) VALUES ($1, $2)', 
+      [user_id, `Purchased ${cartItems.length} items from store`]);
+    
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Checkout error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// PUT /api/cart/update - Update cart item quantity
+app.put('/api/cart/update', async (req: Request, res: Response) => {
+  const { user_id, card_id, quantity } = req.body;
+  
+  if (!user_id || !card_id || quantity === undefined) {
+    return res.status(400).json({ message: 'user_id, card_id, and quantity are required' });
+  }
+  
+  try {
+    if (quantity <= 0) {
+      // Remove item from cart
+      await query('DELETE FROM cart WHERE user_id = $1 AND card_id = $2', [user_id, card_id]);
+    } else {
+      // Check if item exists in cart
+      const existing = await query('SELECT * FROM cart WHERE user_id = $1 AND card_id = $2', [user_id, card_id]);
+      
+      if (existing.length > 0) {
+        // Update existing item
+        await query('UPDATE cart SET quantity = $1 WHERE user_id = $2 AND card_id = $3', [quantity, user_id, card_id]);
+      } else {
+        // Get price from inventory
+        const priceResult = await query('SELECT price FROM inventory WHERE card_id = $1', [card_id]);
+        if (priceResult.length === 0) {
+          return res.status(404).json({ message: 'Card not found in inventory' });
+        }
+        
+        // Add new item to cart
+        await query('INSERT INTO cart (user_id, card_id, quantity, price) VALUES ($1, $2, $3, $4)', 
+          [user_id, card_id, quantity, priceResult[0].price]);
+      }
+    }
+    
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Cart update error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

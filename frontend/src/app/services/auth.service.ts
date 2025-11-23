@@ -29,6 +29,7 @@ export class AuthService {
     const result = await response.json();
     
     if (result === 0) {
+      localStorage.setItem('loginId', username);
       this._isAuthenticated.set(true);
       this._username.set(username);
     }
@@ -37,6 +38,7 @@ export class AuthService {
   }
 
   logout() {
+    localStorage.removeItem('loginId');
     this._isAuthenticated.set(false);
     this._username.set('');
     this.router.navigate(['/login']);

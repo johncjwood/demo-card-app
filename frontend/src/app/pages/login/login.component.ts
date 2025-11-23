@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-login',
@@ -64,6 +65,7 @@ export class LoginComponent {
   errorMessage = '';
   
   private authService = inject(AuthService);
+  private cartService = inject(CartService);
   private router = inject(Router);
 
   async onSubmit() {
@@ -72,6 +74,7 @@ export class LoginComponent {
     try {
       const result = await this.authService.login(this.username, this.password);
       if (result === 0) {
+        await this.cartService.loadCart();
         this.router.navigate(['/dashboard']);
       } else {
         this.errorMessage = 'Username and password doesn\'t match';
