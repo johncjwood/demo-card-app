@@ -269,6 +269,47 @@ app.get('/api/goals-complete/:user_id', async (req: Request, res: Response) => {
   }
 });
 
+// GET /api/profile/:login_id - Get user profile
+app.get('/api/profile/:login_id', async (req: Request, res: Response) => {
+  const { login_id } = req.params;
+  
+  try {
+    const result = await query('SELECT birthday, address_line1, address_line2, city, state, country FROM users WHERE login_id = $1', [login_id]);
+    
+    if (result.length > 0) {
+      const profile = result[0];
+      // Format date for frontend
+      if (profile.birthday) {
+        profile.birthday = profile.birthday.toISOString().split('T')[0];
+      }
+      res.json(profile);
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    console.error('Get profile error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// POST /api/profile/:login_id - Save user profile
+app.post('/api/profile/:login_id', async (req: Request, res: Response) => {
+  const { login_id } = req.params;
+  const { birthday, address_line1, address_line2, city, state, country } = req.body;
+  
+  try {
+    await query(
+      'UPDATE users SET birthday = $1, address_line1 = $2, address_line2 = $3, city = $4, state = $5, country = $6 WHERE login_id = $7',
+      [birthday || null, address_line1, address_line2, city, state, country, login_id]
+    );
+    
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Save profile error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

@@ -35,7 +35,7 @@ import { AuthService } from '../../services/auth.service';
           
           @if (showDropdown()) {
             <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-50">
-              <button class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</button>
+              <a routerLink="/profile" (click)="showDropdown.set(false)" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
               <button 
                 (click)="logout()"
                 class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
