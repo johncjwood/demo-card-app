@@ -1,8 +1,10 @@
 # Checklist
 
 - [x] Ask top 3 clarifying questions
-- [x] Create user_hist table in database schema
-- [x] Create user_hist API endpoint
-- [x] Update frontend dashboard to display recent activity
-- [x] Test the complete flow
-- [x] Add user_hist logging when cards are added/removed
+- [x] Add goals table to database schema
+- [x] Create API endpoint for inserting goals (POST)
+- [x] Create API endpoint for retrieving goals with percent_complete calculation (GET)
+- [x] Test the implementation
+- [x] Update frontend goals page to use API data
+- [x] Add dynamic form for creating new goals
+- [x] Implement form validation and submission

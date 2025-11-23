@@ -208,6 +208,47 @@ app.get('/api/user-hist/:user_id', async (req: Request, res: Response) => {
   }
 });
 
+// POST /api/goals - Create a new goal
+app.post('/api/goals', async (req: Request, res: Response) => {
+  const { user_id, goal_type, qty } = req.body;
+  
+  if (!user_id || !goal_type || !qty) {
+    return res.status(400).json({ message: 'user_id, goal_type, and qty are required' });
+  }
+  
+  try {
+    await query('INSERT INTO goals (user_id, goal_type, qty) VALUES ($1, $2, $3)', [user_id, goal_type, qty]);
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Create goal error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// GET /api/goals/:user_id - Get all goals for a user with percent_complete
+app.get('/api/goals/:user_id', async (req: Request, res: Response) => {
+  const { user_id } = req.params;
+  
+  try {
+    const goals = await query('SELECT goal_id, user_id, goal_type, qty, create_date FROM goals WHERE user_id = $1 ORDER BY create_date DESC', [user_id]);
+    
+    for (let goal of goals) {
+      if (goal.goal_type === 'total') {
+        const cardCount = await query('SELECT COALESCE(SUM(quantity), 0) as total FROM user_card WHERE user_id = $1', [user_id]);
+        const percent = cardCount[0].total / goal.qty;
+        goal.percent_complete = Math.min(percent, 1);
+      } else {
+        goal.percent_complete = 0;
+      }
+    }
+    
+    res.json(goals);
+  } catch (error) {
+    console.error('Get goals error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

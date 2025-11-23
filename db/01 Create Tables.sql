@@ -38,3 +38,11 @@ CREATE TABLE user_hist (
     dt_tm TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     txt TEXT
 );
+
+CREATE TABLE goals (
+    goal_id SERIAL PRIMARY KEY,
+    user_id INT,
+    goal_type VARCHAR(10),
+    qty INT,
+    create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
