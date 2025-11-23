@@ -1,8 +1,6 @@
 # Checklist
 
 - [x] Ask top 3 clarifying questions
-- [x] Examine project structure and existing auth implementation
-- [x] Identify frontend framework and routing system
-- [x] Implement authentication check logic
-- [x] Add redirect functionality to login page
-- [ ] Test the implementation
+- [x] Locate the "11 Insert Test Data - sets.sql" file
+- [x] Update the file with the two specified card sets
+- [x] Verify the data format matches the card_subset table structure
