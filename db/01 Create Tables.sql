@@ -31,3 +31,10 @@ CREATE TABLE user_card (
     card_id INT,
     quantity INT
 );
+
+CREATE TABLE user_hist (
+    user_hist_id SERIAL PRIMARY KEY,
+    user_id INT,
+    dt_tm TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    txt TEXT
+);

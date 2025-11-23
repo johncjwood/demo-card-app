@@ -159,8 +159,12 @@ app.put('/api/cards/quantity', async (req: Request, res: Response) => {
   }
   
   try {
+    // Get card and set info for history logging
+    const cardInfo = await query('SELECT c.card_name, cs.set_name FROM card c LEFT JOIN card_subset cs ON c.card_subset_id = cs.card_subset_id WHERE c.card_id = $1', [card_id]);
+    
     // Check if user_card record exists
     const existingRecord = await query('SELECT * FROM user_card WHERE user_id = $1 AND card_id = $2', [user_id, card_id]);
+    const oldQuantity = existingRecord.length > 0 ? existingRecord[0].quantity : 0;
     
     if (existingRecord.length > 0) {
       // Update existing record
@@ -177,9 +181,29 @@ app.put('/api/cards/quantity', async (req: Request, res: Response) => {
       await query('INSERT INTO user_card (user_card_id, user_id, card_id, quantity) VALUES ($1, $2, $3, $4)', [nextId, user_id, card_id, quantity]);
     }
     
+    // Log to user_hist if quantity changed and card info exists
+    if (cardInfo.length > 0 && quantity !== oldQuantity) {
+      const action = quantity > oldQuantity ? 'added to' : 'removed from';
+      const histText = `Card ${cardInfo[0].card_name} was ${action} set ${cardInfo[0].set_name}`;
+      await query('INSERT INTO user_hist (user_id, txt) VALUES ($1, $2)', [user_id, histText]);
+    }
+    
     res.json({ success: true, quantity: Math.max(0, quantity) });
   } catch (error) {
     console.error('Update quantity error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// GET /api/user-hist/:user_id - Get latest 10 user history records for specific user
+app.get('/api/user-hist/:user_id', async (req: Request, res: Response) => {
+  const { user_id } = req.params;
+  
+  try {
+    const result = await query('SELECT user_hist_id, user_id, dt_tm, txt FROM user_hist WHERE user_id = $1 ORDER BY dt_tm DESC LIMIT 10', [user_id]);
+    res.json(result);
+  } catch (error) {
+    console.error('Get user history error:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 });

@@ -1,7 +1,8 @@
 # Checklist
 
 - [x] Ask top 3 clarifying questions
-- [x] Examine current header component structure
-- [x] Check existing authentication/session management
-- [x] Implement logout functionality in header
-- [x] Test logout functionality
+- [x] Create user_hist table in database schema
+- [x] Create user_hist API endpoint
+- [x] Update frontend dashboard to display recent activity
+- [x] Test the complete flow
+- [x] Add user_hist logging when cards are added/removed
