@@ -11,6 +11,7 @@ Every time a request is made, follow these steps:
 - Create a structured ordered list of tasks that need to be completed
 - Format each item as a checkbox using `- [ ]` syntax
 - Update the checklist as work progresses by marking completed items with `- [x]`
+- At the bottom of the checklist, create a copy of the original prompt that was passed in by the user.
 
 ### 2. First Item: Clarifying Questions
 - The first item on every checklist must be: "Ask top 3 clarifying questions"
@@ -31,4 +32,7 @@ Every time a request is made, follow these steps:
 - [ ] Task item 2
 - [ ] Task item 3
 - [x] Completed task example
+
+User's prompt here
 ```
+

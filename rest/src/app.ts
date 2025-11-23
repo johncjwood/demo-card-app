@@ -375,11 +375,36 @@ app.post('/api/checkout', async (req: Request, res: Response) => {
   }
   
   try {
-    // Get cart items
-    const cartItems = await query('SELECT card_id, quantity FROM cart WHERE user_id = $1', [user_id]);
+    // Get cart items with card names and prices
+    const cartItems = await query(`
+      SELECT c.card_id, c.card_name, cart.quantity, cart.price 
+      FROM cart 
+      LEFT JOIN card c ON cart.card_id = c.card_id 
+      WHERE cart.user_id = $1
+    `, [user_id]);
     
     if (cartItems.length === 0) {
       return res.status(400).json({ message: 'Cart is empty' });
+    }
+    
+    // Calculate totals
+    const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const taxAmount = subtotal * 0.05;
+    const totalAmount = subtotal + taxAmount;
+    
+    // Create order
+    const orderResult = await query(
+      'INSERT INTO orders (user_id, subtotal, tax_amount, total_amount) VALUES ($1, $2, $3, $4) RETURNING order_id',
+      [user_id, subtotal, taxAmount, totalAmount]
+    );
+    const orderId = orderResult[0].order_id;
+    
+    // Create order items
+    for (const item of cartItems) {
+      await query(
+        'INSERT INTO order_items (order_id, card_id, card_name, price, quantity) VALUES ($1, $2, $3, $4, $5)',
+        [orderId, item.card_id, item.card_name, item.price, item.quantity]
+      );
     }
     
     // Add items to user collection
@@ -405,9 +430,9 @@ app.post('/api/checkout', async (req: Request, res: Response) => {
     
     // Add history entry
     await query('INSERT INTO user_hist (user_id, txt) VALUES ($1, $2)', 
-      [user_id, `Purchased ${cartItems.length} items from store`]);
+      [user_id, `Order #${orderId} completed - ${cartItems.length} items purchased`]);
     
-    res.json({ success: true });
+    res.json({ success: true, order_id: orderId });
   } catch (error) {
     console.error('Checkout error:', error);
     res.status(500).json({ message: 'Internal server error' });

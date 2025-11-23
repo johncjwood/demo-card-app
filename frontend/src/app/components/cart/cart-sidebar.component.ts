@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { CartService } from '../../services/cart.service';
 
 @Component({
@@ -57,10 +58,9 @@ import { CartService } from '../../services/cart.service';
                   <span class="font-semibold">Total: \${{ cartService.getTotalPrice().toFixed(2) }}</span>
                 </div>
                 <button 
-                  (click)="checkout()"
-                  [disabled]="isCheckingOut"
-                  class="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 disabled:bg-gray-400">
-                  {{ isCheckingOut ? 'Processing...' : 'Checkout' }}
+                  (click)="goToCheckout()"
+                  class="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
+                  Checkout
                 </button>
               </div>
             }
@@ -71,9 +71,10 @@ import { CartService } from '../../services/cart.service';
   `
 })
 export class CartSidebarComponent implements OnInit {
-  isCheckingOut = false;
-
-  constructor(public cartService: CartService) {}
+  constructor(
+    public cartService: CartService,
+    private router: Router
+  ) {}
 
   async ngOnInit() {
     await this.cartService.loadCart();
@@ -83,15 +84,8 @@ export class CartSidebarComponent implements OnInit {
     await this.cartService.updateQuantity(cardId, quantity);
   }
 
-  async checkout() {
-    this.isCheckingOut = true;
-    const success = await this.cartService.checkout();
-    this.isCheckingOut = false;
-    
-    if (success) {
-      alert('Purchase successful! Items added to your collection.');
-    } else {
-      alert('Checkout failed. Please try again.');
-    }
+  goToCheckout() {
+    this.cartService.toggleCart();
+    this.router.navigate(['/checkout']);
   }
 }

@@ -1,11 +1,13 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { CartService } from './cart.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private router = inject(Router);
+  private cartService = inject(CartService);
   private _username = signal('');
   private _isAuthenticated = signal(false);
 
@@ -39,6 +41,7 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('loginId');
+    this.cartService.clearLocalCart();
     this._isAuthenticated.set(false);
     this._username.set('');
     this.router.navigate(['/login']);
