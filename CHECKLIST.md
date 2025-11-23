@@ -1,9 +1,8 @@
 # Checklist
 
 - [x] Ask top 3 clarifying questions
-- [x] Examine current collections/meg page structure
-- [x] Check existing API endpoints for card ownership updates
-- [x] Implement plus/minus buttons in the frontend
-- [x] Add API request functionality for quantity updates
-- [x] Update frontend state after successful API response
-- [x] Test the implementation
+- [x] Locate and read wht.csv file
+- [x] Analyze existing SQL structure and data format
+- [x] Parse CSV data and convert to SQL INSERT format
+- [x] Update the SQL file with new INSERT statements
+- [x] Verify data integrity and format consistency
