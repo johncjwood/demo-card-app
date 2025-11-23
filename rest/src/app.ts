@@ -321,6 +321,8 @@ app.get('/api/store/cards', async (req: Request, res: Response) => {
         c.card_type,
         c.rarity,
         c.file_loc,
+        c.card_set,
+        c.subset_num,
         cs.set_name,
         i.price,
         i.available_qty

@@ -12,6 +12,8 @@ interface StoreCard {
   set_name: string;
   price: number;
   available_qty: number;
+  card_set: string;
+  subset_num: number;
 }
 
 @Component({
@@ -28,9 +30,12 @@ interface StoreCard {
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         @for (card of cards(); track card.card_id) {
           <div class="bg-white p-4 rounded-lg shadow border border-gray-200 hover:shadow-lg transition-shadow">
-            <div class="aspect-[3/4] bg-gray-100 rounded-lg mb-3 flex items-center justify-center">
-              <span class="text-gray-400 text-sm">Card Image</span>
-            </div>
+            <img 
+              [src]="getImagePath(card)"
+              [alt]="card.card_name"
+              class="aspect-[3/4] w-full object-contain rounded-lg mb-3 bg-gray-50"
+              (error)="onImageError($event)"
+            />
             <h3 class="font-semibold text-gray-900 mb-1">{{ card.card_name }}</h3>
             <p class="text-sm text-gray-600 mb-2">{{ card.set_name }}</p>
             <div class="flex items-center justify-between mb-3">
@@ -65,6 +70,14 @@ export class StoreComponent implements OnInit {
     } catch (error) {
       console.error('Error loading store cards:', error);
     }
+  }
+
+  getImagePath(card: StoreCard): string {
+    return `assets/${card.card_set}/${card.subset_num}.jpg`;
+  }
+
+  onImageError(event: any): void {
+    event.target.src = '/assets/placeholder.svg';
   }
 
   async addToCart(card: StoreCard) {

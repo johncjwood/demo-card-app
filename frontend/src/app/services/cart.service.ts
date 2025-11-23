@@ -40,9 +40,10 @@ export class CartService {
       const cartResponse = await fetch(`http://localhost:3001/api/cart/${userData.user_id}`);
       const cartData = await cartResponse.json();
       
-      this.cartItems.set(cartData);
+      this.cartItems.set(Array.isArray(cartData) ? cartData : []);
     } catch (error) {
       console.error('Error loading cart:', error);
+      this.cartItems.set([]);
     }
   }
 
@@ -71,11 +72,13 @@ export class CartService {
   }
 
   getTotalPrice(): number {
-    return this.cartItems().reduce((total, item) => total + (item.price * item.quantity), 0);
+    const items = this.cartItems();
+    return Array.isArray(items) ? items.reduce((total, item) => total + (item.price * item.quantity), 0) : 0;
   }
 
   getTotalItems(): number {
-    return this.cartItems().reduce((total, item) => total + item.quantity, 0);
+    const items = this.cartItems();
+    return Array.isArray(items) ? items.reduce((total, item) => total + item.quantity, 0) : 0;
   }
 
   async checkout(): Promise<boolean> {
