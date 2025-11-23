@@ -139,6 +139,17 @@ app.get('/api/user/:login_id', async (req: Request, res: Response) => {
   }
 });
 
+// GET /api/collections - Get all card sets
+app.get('/api/collections', async (req: Request, res: Response) => {
+  try {
+    const result = await query('SELECT card_subset_id, set_name, release_date, total_cards FROM card_subset ORDER BY release_date DESC');
+    res.json(result);
+  } catch (error) {
+    console.error('Get collections error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 // PUT /api/cards/quantity - Update card quantity for user
 app.put('/api/cards/quantity', async (req: Request, res: Response) => {
   const { card_id, user_id, quantity } = req.body;
