@@ -1,10 +1,7 @@
 # Checklist
 
 - [x] Ask top 3 clarifying questions
-- [x] Add goals table to database schema
-- [x] Create API endpoint for inserting goals (POST)
-- [x] Create API endpoint for retrieving goals with percent_complete calculation (GET)
+- [x] Extract goal calculation logic into separate function
+- [x] Create goals_complete endpoint that returns count of completed goals
+- [x] Update frontend dashboard component to call new endpoint
 - [x] Test the implementation
-- [x] Update frontend goals page to use API data
-- [x] Add dynamic form for creating new goals
-- [x] Implement form validation and submission

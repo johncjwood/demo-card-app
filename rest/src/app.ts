@@ -225,26 +225,46 @@ app.post('/api/goals', async (req: Request, res: Response) => {
   }
 });
 
+// Helper function to calculate goals with percent_complete
+async function calculateGoalsWithProgress(user_id: string) {
+  const goals = await query('SELECT goal_id, user_id, goal_type, qty, create_date FROM goals WHERE user_id = $1 ORDER BY create_date DESC', [user_id]);
+  
+  for (let goal of goals) {
+    if (goal.goal_type === 'total') {
+      const cardCount = await query('SELECT COALESCE(SUM(quantity), 0) as total FROM user_card WHERE user_id = $1', [user_id]);
+      const percent = cardCount[0].total / goal.qty;
+      goal.percent_complete = Math.min(percent, 1);
+    } else {
+      goal.percent_complete = 0;
+    }
+  }
+  
+  return goals;
+}
+
 // GET /api/goals/:user_id - Get all goals for a user with percent_complete
 app.get('/api/goals/:user_id', async (req: Request, res: Response) => {
   const { user_id } = req.params;
   
   try {
-    const goals = await query('SELECT goal_id, user_id, goal_type, qty, create_date FROM goals WHERE user_id = $1 ORDER BY create_date DESC', [user_id]);
-    
-    for (let goal of goals) {
-      if (goal.goal_type === 'total') {
-        const cardCount = await query('SELECT COALESCE(SUM(quantity), 0) as total FROM user_card WHERE user_id = $1', [user_id]);
-        const percent = cardCount[0].total / goal.qty;
-        goal.percent_complete = Math.min(percent, 1);
-      } else {
-        goal.percent_complete = 0;
-      }
-    }
-    
+    const goals = await calculateGoalsWithProgress(user_id);
     res.json(goals);
   } catch (error) {
     console.error('Get goals error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// GET /api/goals-complete/:user_id - Get count of completed goals
+app.get('/api/goals-complete/:user_id', async (req: Request, res: Response) => {
+  const { user_id } = req.params;
+  
+  try {
+    const goals = await calculateGoalsWithProgress(user_id);
+    const completedCount = goals.filter(goal => goal.percent_complete >= 1).length;
+    res.json(completedCount);
+  } catch (error) {
+    console.error('Get goals complete error:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 });

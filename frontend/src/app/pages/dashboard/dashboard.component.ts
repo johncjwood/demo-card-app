@@ -18,20 +18,15 @@ interface UserHist {
     <div class="p-6">
       <h1 class="text-2xl font-bold text-gray-900 mb-6">Dashboard</h1>
       
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
           <h3 class="text-lg font-semibold text-gray-900 mb-2">Total Cards</h3>
-          <p class="text-3xl font-bold text-blue-600">1,247</p>
-        </div>
-        
-        <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
-          <h3 class="text-lg font-semibold text-gray-900 mb-2">Collections</h3>
-          <p class="text-3xl font-bold text-green-600">8</p>
+          <p class="text-3xl font-bold text-blue-600">-1</p>
         </div>
         
         <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
           <h3 class="text-lg font-semibold text-gray-900 mb-2">Goals Completed</h3>
-          <p class="text-3xl font-bold text-purple-600">12</p>
+          <p class="text-3xl font-bold text-purple-600">{{ goalsCompleted }}</p>
         </div>
       </div>
       
@@ -52,13 +47,23 @@ interface UserHist {
 })
 export class DashboardComponent implements OnInit {
   userHistory: UserHist[] = [];
+  goalsCompleted: number = 0;
   private authService = inject(AuthService);
   private cdr = inject(ChangeDetectorRef);
 
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
+    this.loadData();
+  }
+
+  ionViewWillEnter() {
+    this.loadData();
+  }
+
+  private loadData() {
     this.loadUserHistory();
+    this.loadGoalsCompleted();
   }
 
   loadUserHistory() {
@@ -73,6 +78,24 @@ export class DashboardComponent implements OnInit {
               this.cdr.detectChanges();
             },
             error: (error) => console.error('Error loading user history:', error)
+          });
+      },
+      error: (error) => console.error('Error loading user:', error)
+    });
+  }
+
+  loadGoalsCompleted() {
+    const username = this.authService.username();
+    
+    this.http.get<{user_id: number}>(`http://localhost:3001/api/user/${username}`).subscribe({
+      next: (userData) => {
+        this.http.get<number>(`http://localhost:3001/api/goals-complete/${userData.user_id}`)
+          .subscribe({
+            next: (count) => {
+              this.goalsCompleted = count;
+              this.cdr.detectChanges();
+            },
+            error: (error) => console.error('Error loading goals completed:', error)
           });
       },
       error: (error) => console.error('Error loading user:', error)
