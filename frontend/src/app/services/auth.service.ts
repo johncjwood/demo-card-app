@@ -1,9 +1,11 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private router = inject(Router);
   private _username = signal('');
   private _isAuthenticated = signal(false);
 
@@ -37,5 +39,6 @@ export class AuthService {
   logout() {
     this._isAuthenticated.set(false);
     this._username.set('');
+    this.router.navigate(['/login']);
   }
 }
