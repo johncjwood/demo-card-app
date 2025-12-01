@@ -11,6 +11,18 @@ export class AuthService {
   private _username = signal('');
   private _isAuthenticated = signal(false);
 
+  constructor() {
+    this.initializeAuth();
+  }
+
+  private initializeAuth() {
+    const loginId = localStorage.getItem('loginId');
+    if (loginId) {
+      this._isAuthenticated.set(true);
+      this._username.set(loginId);
+    }
+  }
+
   get username() {
     return this._username.asReadonly();
   }

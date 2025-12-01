@@ -9,8 +9,6 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password1!
       - POSTGRES_DB=cardapp
-    networks:
-      - proxy
 
   rest-api:
     build:
@@ -27,8 +25,6 @@ services:
       - ./frontend/public/assets:/app/assets
     depends_on:
       - db-setup
-    networks:
-      - proxy
 
   db-setup:
     build:
@@ -42,8 +38,6 @@ services:
       - DB_PASSWORD=password1!
     depends_on:
       - postgres
-    networks:
-      - proxy
 
   frontend:
     build:
@@ -60,10 +54,4 @@ services:
       - ./frontend/src/assets:/app/src/assets
     depends_on:
       - rest-api
-    networks:
-      - proxy
-
-networks:
-  proxy:
-    driver: bridge
 

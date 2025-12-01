@@ -55,6 +55,7 @@ import { CartService, CartItem } from '../../services/cart.service';
           <button 
             (click)="completeCheckout()"
             [disabled]="isProcessing"
+            data-testid="complete-order-button"
             class="flex-1 bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 disabled:bg-gray-400">
             {{ isProcessing ? 'Processing...' : 'Complete Order' }}
           </button>

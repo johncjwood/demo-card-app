@@ -27,6 +27,7 @@ import { CartService } from '../../services/cart.service';
         <div class="flex items-center space-x-4">
           <button 
             (click)="cartService.toggleCart()"
+            data-testid="cart-icon"
             class="relative p-2 rounded-md hover:bg-gray-100">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
@@ -50,7 +51,7 @@ import { CartService } from '../../services/cart.service';
           
           @if (showDropdown()) {
             <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-50">
-              <a routerLink="/profile" (click)="showDropdown.set(false)" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+              <a routerLink="/profile" (click)="showDropdown.set(false)" data-testid="profile-link" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
               <button 
                 (click)="logout()"
                 class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">

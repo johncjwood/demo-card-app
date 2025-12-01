@@ -27,6 +27,7 @@ interface ProfileData {
           <input
             type="date"
             id="birthday"
+            data-testid="birthday-input"
             [(ngModel)]="profile().birthday"
             name="birthday"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -38,6 +39,7 @@ interface ProfileData {
           <input
             type="text"
             id="address1"
+            data-testid="address1-input"
             [(ngModel)]="profile().address_line1"
             name="address1"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -60,6 +62,7 @@ interface ProfileData {
           <input
             type="text"
             id="city"
+            data-testid="city-input"
             [(ngModel)]="profile().city"
             name="city"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -70,6 +73,7 @@ interface ProfileData {
           <label for="state" class="block text-sm font-medium text-gray-700 mb-2">State</label>
           <select
             id="state"
+            data-testid="state-select"
             [(ngModel)]="profile().state"
             name="state"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -143,6 +147,7 @@ interface ProfileData {
         <div class="pt-4">
           <button
             type="submit"
+            data-testid="save-profile-button"
             [disabled]="saving()"
             class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >

@@ -42,6 +42,7 @@ import { CartService } from '../../services/cart.service';
                         <span class="w-8 text-center">{{ item.quantity }}</span>
                         <button 
                           (click)="updateQuantity(item.card_id, item.quantity + 1)"
+                          data-testid="increase-quantity"
                           class="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center">
                           +
                         </button>
@@ -59,6 +60,7 @@ import { CartService } from '../../services/cart.service';
                 </div>
                 <button 
                   (click)="goToCheckout()"
+                  data-testid="checkout-button"
                   class="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
                   Checkout
                 </button>
