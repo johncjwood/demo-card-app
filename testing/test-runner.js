@@ -175,7 +175,7 @@ class TestRunner {
     await this.page.click('[data-testid="cart-icon"]');
     await this.page.waitForTimeout(500);
     
-    for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < 11; i++) {
       await this.page.click('[data-testid="increase-quantity"]');
       await this.page.waitForTimeout(200);
     }
@@ -183,6 +183,30 @@ class TestRunner {
     await this.page.click('[data-testid="checkout-button"]');
     await this.page.waitForURL('**/checkout');
     console.log('✓ Test 310 passed: Increased quantity to 10 and navigated to checkout');
+  }
+
+  async test350() {
+    console.log('Running Test 350: Verify checkout quantity is 12');
+    await this.page.waitForURL('**/checkout');
+    const quantityText = await this.page.locator('text=/Quantity: \\d+/').textContent();
+    const quantity = parseInt(quantityText.match(/\d+/)[0]);
+    if (quantity === 12) {
+      console.log('✓ Test 350 passed: Quantity is 12');
+    } else {
+      throw new Error(`Expected quantity 12, found: ${quantity}`);
+    }
+  }
+
+  async test351() {
+    console.log('Running Test 351: Verify checkout quantity is 10');
+    await this.page.waitForURL('**/checkout');
+    const quantityText = await this.page.locator('text=/Quantity: \\d+/').textContent();
+    const quantity = parseInt(quantityText.match(/\d+/)[0]);
+    if (quantity === 10) {
+      console.log('✓ Test 351 passed: Quantity is 10');
+    } else {
+      throw new Error(`Expected quantity 10, found: ${quantity}`);
+    }
   }
 
   async test390() {
@@ -308,6 +332,8 @@ class TestRunner {
       200: () => this.test200(),
       300: () => this.test300(),
       310: () => this.test310(),
+      350: () => this.test350(),
+      351: () => this.test351(),
       390: () => this.test390(),
       395: () => this.test395(),
       400: () => this.test400()
