@@ -48,6 +48,7 @@ node test-runner.js 100 200 300 310 390 395 400
 - **Test 390**: Complete order - completes the purchase and returns to dashboard
 - **Test 395**: Verify unavailability - confirms Mega Absol EX is no longer available
 - **Test 400**: Collections - verifies user owns 10 copies of Mega Absol ex in Mega Evolutions
+- **Test 900**: Dashboard - verifies default behavior that there are -1 total cards.
 
 ## Prerequisites
 

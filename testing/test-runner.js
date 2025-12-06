@@ -224,7 +224,7 @@ class TestRunner {
     await this.page.click('[data-testid="collection-mega-evolutions"]');
     await this.page.waitForURL('**/collections/meg');
     
-    const quantityElement = await this.page.locator('[data-testid="card-quantity-86"]');
+    const quantityElement = await this.page.locator('[data-testid="card-quantity-180"]');
     const quantityText = await quantityElement.textContent();
     
     if (quantityText === '10') {
