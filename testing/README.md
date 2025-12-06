@@ -53,4 +53,4 @@ node test-runner.js 100 200 300 310 390 395 400
 
 - Application must be running on http://localhost
 - Database must be seeded with test data
-- Bob user account must exist with password "password"
+- bob user account must exist with password "password"
