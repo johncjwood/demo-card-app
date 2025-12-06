@@ -21,7 +21,7 @@ interface UserHist {
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
           <h3 class="text-lg font-semibold text-gray-900 mb-2">Total Cards</h3>
-          <p class="text-3xl font-bold text-blue-600">-1</p>
+          <p class="text-3xl font-bold text-blue-600" data-testid="total-cards-count">-1</p>
         </div>
         
         <div class="bg-white p-6 rounded-lg shadow border border-gray-200">

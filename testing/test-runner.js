@@ -224,14 +224,28 @@ class TestRunner {
     await this.page.click('[data-testid="collection-mega-evolutions"]');
     await this.page.waitForURL('**/collections/meg');
     
-    const megaAbsolCard = await this.page.locator('text=Mega Absol ex').first();
-    const cardContainer = megaAbsolCard.locator('..').locator('..');
-    const quantityText = await cardContainer.locator('text=/Owned:.*10/').textContent();
+    const quantityElement = await this.page.locator('[data-testid="card-quantity-86"]');
+    const quantityText = await quantityElement.textContent();
     
-    if (quantityText && quantityText.includes('10')) {
+    if (quantityText === '10') {
       console.log('✓ Test 400 passed: User owns 10 copies of Mega Absol ex');
     } else {
-      throw new Error('Expected 10 copies of Mega Absol ex in collection');
+      throw new Error(`Expected 10 copies of Mega Absol ex in collection, found: ${quantityText}`);
+    }
+  }
+
+  async test900() {
+    console.log('Running Test 900: Check Total Cards on dashboard');
+    await this.page.goto('http://localhost/dashboard');
+    await this.page.waitForLoadState('networkidle');
+    
+    const totalCardsElement = await this.page.locator('text=/Total Cards.*-1/').first();
+    const isVisible = await totalCardsElement.isVisible().catch(() => false);
+    
+    if (isVisible) {
+      console.log('✓ Test 900 passed: Total Cards shows -1');
+    } else {
+      throw new Error('Total Cards value is not -1 or element not found');
     }
   }
 
