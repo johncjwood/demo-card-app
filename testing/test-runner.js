@@ -209,6 +209,42 @@ class TestRunner {
     }
   }
 
+  async test360() {
+    console.log('Running Test 360: Verify total purchase price is 519.75');
+    await this.page.waitForURL('**/checkout');
+    const totalText = await this.page.locator('text=/Total:/').locator('..').locator('span').last().textContent();
+    const total = parseFloat(totalText.replace('$', ''));
+    if (total === 519.75) {
+      console.log('✓ Test 360 passed: Total is $519.75');
+    } else {
+      throw new Error(`Expected total $519.75, found: $${total}`);
+    }
+  }
+
+  async test361() {
+    console.log('Running Test 361: Verify total cost is 433.13');
+    await this.page.waitForURL('**/checkout');
+    const totalText = await this.page.locator('text=/Total:/').locator('..').locator('span').last().textContent();
+    const total = parseFloat(totalText.replace('$', ''));
+    if (total === 433.13) {
+      console.log('✓ Test 361 passed: Total is $433.13');
+    } else {
+      throw new Error(`Expected total $433.13, found: $${total}`);
+    }
+  }
+
+  async test362() {
+    console.log('Running Test 362: Verify total cost is 529.65');
+    await this.page.waitForURL('**/checkout');
+    const totalText = await this.page.locator('text=/Total:/').locator('..').locator('span').last().textContent();
+    const total = parseFloat(totalText.replace('$', ''));
+    if (total === 529.65) {
+      console.log('✓ Test 362 passed: Total is $529.65');
+    } else {
+      throw new Error(`Expected total $529.65, found: $${total}`);
+    }
+  }
+
   async test390() {
     console.log('Running Test 390: Complete order');
     await this.page.click('[data-testid="complete-order-button"]');
@@ -334,6 +370,9 @@ class TestRunner {
       310: () => this.test310(),
       350: () => this.test350(),
       351: () => this.test351(),
+      360: () => this.test360(),
+      361: () => this.test361(),
+      362: () => this.test362(),
       390: () => this.test390(),
       395: () => this.test395(),
       400: () => this.test400()
@@ -342,18 +381,27 @@ class TestRunner {
     await this.startDockerServices();
     await this.setup();
 
+    const failures = [];
     try {
       for (const testNum of testNumbers.sort((a, b) => a - b)) {
         if (testMap[testNum]) {
-          await testMap[testNum]();
+          try {
+            await testMap[testNum]();
+          } catch (error) {
+            console.error(`❌ Test ${testNum} failed:`, error.message);
+            failures.push({ testNum, error: error.message });
+          }
         } else {
           console.log(`⚠ Test ${testNum} not found`);
         }
       }
-      console.log('\n🎉 All tests completed successfully!');
-    } catch (error) {
-      console.error('❌ Test failed:', error.message);
-      process.exit(1);
+      if (failures.length === 0) {
+        console.log('\n🎉 All tests completed successfully!');
+      } else {
+        console.log(`\n⚠️  ${failures.length} test(s) failed:`);
+        failures.forEach(f => console.log(`  - Test ${f.testNum}: ${f.error}`));
+        process.exit(1);
+      }
     } finally {
       await this.teardown();
     }
