@@ -30,7 +30,7 @@ interface Card {
       <div *ngIf="!loading && cards.length === 0" class="text-gray-600">No cards found.</div>
       <div *ngIf="!loading && cards.length > 0">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          <div *ngFor="let card of cards; trackBy: trackBySubsetNum" class="bg-white rounded-lg shadow-lg p-4 hover:shadow-xl transition-shadow">
+          <div *ngFor="let card of cards; trackBy: trackBySubsetNum" class="bg-white rounded-lg shadow-lg p-4 hover:shadow-xl transition-shadow" [attr.data-testid]="'card-' + card.subset_num">
             <img 
               [src]="getImagePath(card.subset_num)"
               [alt]="card.card_name"
@@ -61,13 +61,18 @@ interface Card {
                       class="w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center font-bold text-lg"
                       [disabled]="card.quantity <= 0"
                       [class.opacity-50]="card.quantity <= 0"
+                      [attr.data-testid]="'decrease-quantity-' + card.subset_num"
                     >
                       −
                     </button>
-                    <span class="text-sm font-semibold text-blue-600 min-w-[2rem] text-center">{{ card.quantity }}</span>
+                    <span 
+                      class="text-sm font-semibold text-blue-600 min-w-[2rem] text-center"
+                      [attr.data-testid]="'card-quantity-' + card.subset_num"
+                    >{{ card.quantity }}</span>
                     <button 
                       (click)="updateQuantity(card, 1)"
                       class="w-8 h-8 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-lg"
+                      [attr.data-testid]="'increase-quantity-' + card.subset_num"
                     >
                       +
                     </button>
