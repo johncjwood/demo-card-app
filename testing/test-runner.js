@@ -296,6 +296,27 @@ class TestRunner {
     }
   }
 
+  async test401() {
+    console.log('Running Test 401: Verify collection ownership');
+    await this.page.click('[data-testid="collections-nav-link"]');
+    await this.page.waitForURL('**/collections');
+    await this.page.waitForLoadState('networkidle');
+    
+    await this.page.click('[data-testid="collection-mega-evolutions"]');
+    await this.page.waitForURL('**/collections/meg');
+    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForSelector('[data-testid="card-quantity-180"]', { timeout: 5000 });
+    
+    const quantityElement = await this.page.locator('[data-testid="card-quantity-180"]');
+    const quantityText = await quantityElement.textContent();
+    
+    if (quantityText === '10') {
+      console.log('✓ Test 401 passed: User owns 10 copies of Mega Absol ex');
+    } else {
+      throw new Error(`Expected 10 copies of Mega Absol ex in collection, found: ${quantityText}`);
+    }
+  }
+
   async test500() {
     console.log('Running Test 500: Add quantities for Bulbasaur, Ivysaur, Mega Venusaur ex, Exeggcute');
     await this.page.goto('http://localhost/collections/meg');
@@ -401,6 +422,7 @@ class TestRunner {
       390: () => this.test390(),
       395: () => this.test395(),
       400: () => this.test400(),
+      401: () => this.test401(),
       500: () => this.test500()
     };
 

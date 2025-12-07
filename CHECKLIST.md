@@ -1,18 +1,15 @@
 # Checklist
 
 - [x] Ask top 3 clarifying questions
-- [x] Read test-runner.js and identify wait times longer than 5 seconds
-- [x] Lower any wait times that exceed 5 seconds
-- [x] Run the test command: node test-runner.js 100 200 300 310 350 360 390 395 400 500
-- [ ] Fix any failing tests by updating tests or frontend code
-- [ ] Verify all tests pass
+- [x] Review Test 400 implementation
+- [x] Add Test 401 (same as Test 400 but checking for 10 copies)
+- [x] Run test command: node test-runner.js 100 200 300 310 350 360 390 395 400 401 500
+- [x] Verify only Test 401 fails
 
 ## Original User Prompt
+I would like to add a new test, Test 401. It should be exactly like Test 400, except it should look for 10 copies.
 
-Look at the code in test-runner.js
-There should be no wait times longer than 5 seconds. Please lower any wait times which occur later.
+After implementation, run :
+node test-runner.js 100 200 300 310 350 360 390 395 400 401 500
 
-Next, run this code:
-node test-runner.js 100 200 300 310 350 360 390 395 400 500
-
-If any fail, then please update the tests or the relevant frontend code so they succeed
+Only Test 401 should fail.
