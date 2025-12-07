@@ -1,22 +1,14 @@
 # Checklist
 
 - [x] Ask top 3 clarifying questions
-- [x] Review existing test structure and goals page implementation
-- [x] Add test identifiers to frontend code if needed
-- [x] Create Test 600 (navigate, add goal, submit)
-- [x] Create Test 601 (verify goal completion display)
-- [x] Run test suite to verify all tests pass
+- [x] Locate and read existing tests 600 and 601
+- [x] Create Test 650 based on Test 600 with "Total Unique" dropdown selection
+- [x] Create Test 651 based on Test 601 with "Total Unique" dropdown selection and 50% completion check
+- [x] Update frontend code to add "Total Unique" option to dropdown
+- [x] Verify tests are created correctly
 
 ## Original User Prompt
 
-Add 2 new tests, Test 600 and Test 601. Test 600 should 
-1) Navigate to the /goals page
-2) click the "Add New Goal" button
-3) In the "Create New Goal" area, the dropdown should be set to "Total Cards" and the quantity should be set to 10
-4) The Submit button should be pressed
-Test 601 should see that you're still on the /goals page, and that there is a new box that shows the goal is completed 100%
+Create 2 new tests, Test 650 and Test 651. It should be a copy of 600 and 601 respectively, except for the dropdown it should choose "Total Unique" from the dropdown with a quantity 10. 651 should observe that this second goal is 50% complete.
 
-Please create these tests and if you need to add additional identifiers to the frontend code to make the testing code simpler, please do.
-
-When finished, run the test script and everything should succeed:
-node test-runner.js 100 200 300 310 350 360 390 395 400 500 600 601
+This test should not pass, but please update the frontend code to add the value "Total Unique" to the dropdown so that this test can fail gracefully.

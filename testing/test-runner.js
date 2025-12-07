@@ -373,6 +373,72 @@ class TestRunner {
     }
   }
 
+  async test650() {
+    console.log('Running Test 650: Create new goal with Total Unique');
+    await this.page.goto('http://localhost/goals');
+    await this.page.waitForURL('**/goals');
+    await this.page.waitForLoadState('networkidle');
+    
+    await this.page.click('[data-testid="add-new-goal-button"]');
+    await this.page.waitForTimeout(500);
+    
+    await this.page.selectOption('[data-testid="goal-type-select"]', 'total_unique');
+    await this.page.fill('[data-testid="goal-quantity-input"]', '10');
+    
+    await this.page.click('[data-testid="submit-goal-button"]');
+    await this.page.waitForTimeout(1000);
+    
+    console.log('✓ Test 650 passed: Goal created successfully');
+  }
+
+  async test651() {
+    console.log('Running Test 651: Verify goal completion');
+    await this.page.waitForURL('**/goals');
+    await this.page.waitForLoadState('networkidle');
+    
+    const completionElement = await this.page.locator('[data-testid^="goal-completion-"]').last();
+    const completionText = await completionElement.textContent();
+    
+    if (completionText === '50%') {
+      console.log('✓ Test 651 passed: Goal shows 50% completion');
+    } else {
+      throw new Error(`Expected 50% completion, found: ${completionText}`);
+    }
+  }
+
+  async test660() {
+    console.log('Running Test 660: Create new goal with Total Above 4');
+    await this.page.goto('http://localhost/goals');
+    await this.page.waitForURL('**/goals');
+    await this.page.waitForLoadState('networkidle');
+    
+    await this.page.click('[data-testid="add-new-goal-button"]');
+    await this.page.waitForTimeout(500);
+    
+    await this.page.selectOption('[data-testid="goal-type-select"]', 'total_above_4');
+    await this.page.fill('[data-testid="goal-quantity-input"]', '2');
+    
+    await this.page.click('[data-testid="submit-goal-button"]');
+    await this.page.waitForTimeout(1000);
+    
+    console.log('✓ Test 660 passed: Goal created successfully');
+  }
+
+  async test661() {
+    console.log('Running Test 661: Verify goal completion');
+    await this.page.waitForURL('**/goals');
+    await this.page.waitForLoadState('networkidle');
+    
+    const completionElement = await this.page.locator('[data-testid^="goal-completion-"]').last();
+    const completionText = await completionElement.textContent();
+    
+    if (completionText === '50%') {
+      console.log('✓ Test 661 passed: Goal shows 50% completion');
+    } else {
+      throw new Error(`Expected 50% completion, found: ${completionText}`);
+    }
+  }
+
   async test900() {
     console.log('Running Test 900: Check Total Cards on dashboard');
     await this.page.goto('http://localhost/dashboard');
@@ -458,7 +524,11 @@ class TestRunner {
       401: () => this.test401(),
       500: () => this.test500(),
       600: () => this.test600(),
-      601: () => this.test601()
+      601: () => this.test601(),
+      650: () => this.test650(),
+      651: () => this.test651(),
+      660: () => this.test660(),
+      661: () => this.test661()
     };
 
     await this.startDockerServices();

@@ -26,6 +26,8 @@ import { GoalsService, Goal } from '../../services/goals.service';
                 <select [(ngModel)]="newGoal.goalType" name="goalType" required data-testid="goal-type-select" class="w-full p-2 border border-gray-300 rounded-lg">
                   <option value="">Select type</option>
                   <option value="total">Total Cards</option>
+                  <option value="total_above_4">Total Above 4</option>
+                  <option value="total_unique">Total Unique</option>
                 </select>
               </div>
               <div>
