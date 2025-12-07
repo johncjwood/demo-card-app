@@ -340,6 +340,39 @@ class TestRunner {
     console.log('✓ Test 500 passed: Successfully added 1 quantity for all 4 cards');
   }
 
+  async test600() {
+    console.log('Running Test 600: Create new goal');
+    await this.page.goto('http://localhost/goals');
+    await this.page.waitForURL('**/goals');
+    await this.page.waitForLoadState('networkidle');
+    
+    await this.page.click('[data-testid="add-new-goal-button"]');
+    await this.page.waitForTimeout(500);
+    
+    await this.page.selectOption('[data-testid="goal-type-select"]', 'total');
+    await this.page.fill('[data-testid="goal-quantity-input"]', '10');
+    
+    await this.page.click('[data-testid="submit-goal-button"]');
+    await this.page.waitForTimeout(1000);
+    
+    console.log('✓ Test 600 passed: Goal created successfully');
+  }
+
+  async test601() {
+    console.log('Running Test 601: Verify goal completion');
+    await this.page.waitForURL('**/goals');
+    await this.page.waitForLoadState('networkidle');
+    
+    const completionElement = await this.page.locator('[data-testid^="goal-completion-"]').first();
+    const completionText = await completionElement.textContent();
+    
+    if (completionText === '100%') {
+      console.log('✓ Test 601 passed: Goal shows 100% completion');
+    } else {
+      throw new Error(`Expected 100% completion, found: ${completionText}`);
+    }
+  }
+
   async test900() {
     console.log('Running Test 900: Check Total Cards on dashboard');
     await this.page.goto('http://localhost/dashboard');
@@ -423,7 +456,9 @@ class TestRunner {
       395: () => this.test395(),
       400: () => this.test400(),
       401: () => this.test401(),
-      500: () => this.test500()
+      500: () => this.test500(),
+      600: () => this.test600(),
+      601: () => this.test601()
     };
 
     await this.startDockerServices();

@@ -11,7 +11,7 @@ import { GoalsService, Goal } from '../../services/goals.service';
     <div class="p-6">
       <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-gray-900">Goals</h1>
-        <button (click)="showForm = !showForm" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+        <button (click)="showForm = !showForm" data-testid="add-new-goal-button" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
           Add New Goal
         </button>
       </div>
@@ -23,18 +23,18 @@ import { GoalsService, Goal } from '../../services/goals.service';
             <div class="grid grid-cols-2 gap-4 mb-4">
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Goal Type</label>
-                <select [(ngModel)]="newGoal.goalType" name="goalType" required class="w-full p-2 border border-gray-300 rounded-lg">
+                <select [(ngModel)]="newGoal.goalType" name="goalType" required data-testid="goal-type-select" class="w-full p-2 border border-gray-300 rounded-lg">
                   <option value="">Select type</option>
                   <option value="total">Total Cards</option>
                 </select>
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
-                <input [(ngModel)]="newGoal.qty" name="qty" type="number" min="1" required class="w-full p-2 border border-gray-300 rounded-lg">
+                <input [(ngModel)]="newGoal.qty" name="qty" type="number" min="1" required data-testid="goal-quantity-input" class="w-full p-2 border border-gray-300 rounded-lg">
               </div>
             </div>
             <div class="flex gap-2">
-              <button type="submit" [disabled]="!goalForm.valid" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:bg-gray-400">
+              <button type="submit" [disabled]="!goalForm.valid" data-testid="submit-goal-button" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:bg-gray-400">
                 Submit
               </button>
               <button type="button" (click)="showForm = false" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700">
@@ -59,6 +59,9 @@ import { GoalsService, Goal } from '../../services/goals.service';
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2">
                 <div [class]="getProgressBarClass(goal.percent_complete)" [style.width.%]="goal.percent_complete * 100"></div>
+              </div>
+              <div class="text-right text-sm text-gray-600 mt-1">
+                <span [attr.data-testid]="'goal-completion-' + goal.goal_id">{{(goal.percent_complete * 100).toFixed(0)}}%</span>
               </div>
             </div>
             <p class="text-gray-600 text-sm">Created: {{formatDate(goal.create_date)}}</p>
