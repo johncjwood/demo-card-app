@@ -454,6 +454,50 @@ class TestRunner {
     }
   }
 
+  async test901() {
+    console.log('Running Test 901: Check Total Cards on dashboard');
+    await this.page.goto('http://localhost/dashboard');
+    await this.page.waitForLoadState('networkidle');
+    
+    const totalCardsElement = await this.page.locator('text=/Total Cards.*-2/').first();
+    const isVisible = await totalCardsElement.isVisible().catch(() => false);
+    
+    if (isVisible) {
+      console.log('✓ Test 901 passed: Total Cards shows -2');
+    } else {
+      throw new Error('Total Cards value is not -2 or element not found');
+    }
+  }
+
+  async test902() {
+    console.log('Running Test 902: Check Total Cards on dashboard');
+    await this.page.goto('http://localhost/dashboard');
+    await this.page.waitForLoadState('networkidle');
+    
+    const totalCardsElement = await this.page.locator('text=/Total Cards.*16/').first();
+    const isVisible = await totalCardsElement.isVisible().catch(() => false);
+    
+    if (isVisible) {
+      console.log('✓ Test 902 passed: Total Cards shows 16');
+    } else {
+      throw new Error('Total Cards value is not 16 or element not found');
+    }
+  }
+
+  async test950() {
+    console.log('Running Test 950: Check star icon next to bob on dashboard');
+    await this.page.waitForLoadState('networkidle');
+    
+    const starIcon = await this.page.locator('button:has-text("bob") svg[data-icon="star"]').first();
+    const isVisible = await starIcon.isVisible().catch(() => false);
+    
+    if (isVisible) {
+      console.log('✓ Test 950 passed: Star icon is visible next to bob');
+    } else {
+      throw new Error('Star icon not found next to bob on dashboard');
+    }
+  }
+
   async startDockerServices() {
     console.log('🐳 Stopping and rebuilding Docker services...');
     await execAsync('docker compose down -v && docker compose up --build -d --remove-orphans', { cwd: '..' });
@@ -528,7 +572,11 @@ class TestRunner {
       650: () => this.test650(),
       651: () => this.test651(),
       660: () => this.test660(),
-      661: () => this.test661()
+      661: () => this.test661(),
+      900: () => this.test900(),
+      901: () => this.test901(),
+      902: () => this.test902(),
+      950: () => this.test950()
     };
 
     await this.startDockerServices();
